@@ -21,6 +21,9 @@ image_build:
   before_script:
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(echo -n ${CI_REGISTRY_USER}:${CI_REGISTRY_PASSWORD} | base64)\"}}}" > /kaniko/.docker/config.json
+    - >
+      [[ ! -z "$APP_NAME" ]] &&
+      export CI_PROJECT_NAME=$APP_NAME
   script:
     - /kaniko/executor --context $CI_PROJECT_DIR
       --cache=true
