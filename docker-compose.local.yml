@@ -5,7 +5,7 @@ services:
     ports:
       - "9020:9020"
     environment:
-      APP_PROFILE: sandbox
+      APP_PROFILE: ${APP_PROFILE:-sandbox}
     volumes:
-      - ./settings/contours/sandbox.yaml:/app/settings/contours/sandbox.yaml:ro
+      - ./settings/contours/${APP_PROFILE:-sandbox}.yaml:/app/settings/contours/${APP_PROFILE:-sandbox}.yaml:ro
     restart: unless-stopped

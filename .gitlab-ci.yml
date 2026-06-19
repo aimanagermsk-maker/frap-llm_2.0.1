@@ -34,8 +34,8 @@ deploy_job_cuda2:
   script:
     - echo "DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME" > .env
     - echo "DOCKER_CONTAINER_NAME=new-project-api" >> .env
-    - echo "APP_PROFILE=prod" >> .env
-    - echo "CONTOUR_CONFIG_PATH=/opt/new-project/prod.yaml" >> .env
+    - echo "APP_PROFILE=$APP_PROFILE" >> .env
+    - echo "CONTOUR_CONFIG_PATH=$CONTOUR_CONFIG_PATH" >> .env
     - docker-compose -p new-project-api down --remove-orphans || true
     - echo "Starting deploy with docker-compose cuda2"
     - docker pull $DOCKER_IMAGE_NAME
