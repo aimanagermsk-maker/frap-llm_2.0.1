@@ -1,0 +1,6 @@
+
+contour: prod
+
+logging:
+  app: INFO
+

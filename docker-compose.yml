@@ -1,0 +1,15 @@
+services:
+  new-project:
+    image: ${DOCKER_IMAGE_NAME}
+    container_name: ${DOCKER_CONTAINER_NAME}
+    environment:
+      APP_PROFILE: ${APP_PROFILE:-prod}
+    volumes:
+      - ${CONTOUR_CONFIG_PATH:-./settings/contours/prod.yaml}:/app/settings/contours/prod.yaml:ro
+    networks:
+      - easy-craft-network
+    restart: unless-stopped
+
+networks:
+  easy-craft-network:
+    external: true

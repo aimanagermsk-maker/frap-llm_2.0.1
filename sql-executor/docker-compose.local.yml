@@ -1,0 +1,12 @@
+
+version: '3.8'
+
+services:
+  database:
+    build: .
+    container_name: database-app
+    ports:
+      - "9010:9010"
+    environment:
+      DB_CONFIG_PG_DASHBOARD: ${DB_CONFIG_PG_DASHBOARD}
+    restart: unless-stopped

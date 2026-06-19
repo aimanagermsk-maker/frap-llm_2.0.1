@@ -1,0 +1,11 @@
+services:
+  new-project:
+    build: .
+    container_name: new-project-app
+    ports:
+      - "9020:9020"
+    environment:
+      APP_PROFILE: sandbox
+    volumes:
+      - ./settings/contours/sandbox.yaml:/app/settings/contours/sandbox.yaml:ro
+    restart: unless-stopped

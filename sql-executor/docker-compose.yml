@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  database:
+    # Образ из registry; имя подставляется из .env при деплое (DOCKER_IMAGE_NAME)
+    image: ${DOCKER_IMAGE_NAME}
+      
+    environment:
+      # DSN и токены — из .env на сервере (формируется deploy_job из GitLab CI/CD Variables)
+      - DB_CONFIG_PG_DASHBOARD=${DB_CONFIG_PG_DASHBOARD}
+      - SYSTEM_APPS_TOKEN=${SYSTEM_APPS_TOKEN}
+      - API_ROOT_PATH=/gateway/api/database-api
+
+    container_name: ${DOCKER_CONTAINER_NAME}
+
+    networks:
+      - easy-craft-network
+    restart: unless-stopped
+
+networks:
+  easy-craft-network:
+    external: true

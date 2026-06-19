@@ -1,0 +1,62 @@
+stages:
+  - docker_build
+  - docker_push
+  - deploy
+
+variables:
+  # Имя в registry и Docker; не зависит от slug GitLab (sql-executor)
+  DEPLOY_NAME: "database"
+  DOCKER_IMAGE_NAME: "$CI_REGISTRY_NAME/$DEPLOY_NAME:latest"
+
+
+docker_build_job:
+  stage: docker_build
+  tags:
+    - shell
+  script:
+    # Собираем образ из Dockerfile в корне репозитория; --network host — доступ к сети хоста при сборке
+    - docker build --network host -t $DOCKER_IMAGE_NAME .
+
+
+docker_push_job:
+  stage: docker_push
+  tags:
+    - shell
+  dependencies:
+    - docker_build_job
+  script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+    - docker push $DOCKER_IMAGE_NAME
+
+
+deploy_job_cuda2:
+  stage: deploy
+  tags:
+    - shell-cuda2
+  script:
+    # Логируем имя образа для отладки
+    - echo "DOCKER_IMAGE_NAME $DOCKER_IMAGE_NAME"
+    # Записываем имя образа в .env для docker-compose на сервере
+    - echo "DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME" > .env
+    # Логируем имя контейнера
+    - echo "DOCKER_CONTAINER_NAME database-api"
+    # Имя контейнера для docker-compose
+    - echo "DOCKER_CONTAINER_NAME=database-api" >> .env
+    # DSN к PostgreSQL analytics-ai
+    - echo "DB_CONFIG_PG_DASHBOARD=$DB_CONFIG_PG_DASHBOARD" >> .env
+    # JWT системных приложений (GitLab CI/CD Variable SYSTEM_APPS_TOKEN)
+    - echo "SYSTEM_APPS_TOKEN=$SYSTEM_APPS_TOKEN" >> .env
+    # Старый контейнер и compose-проект до переименования (sql-executor)
+    - docker rm -f sql-executor || true
+    - docker-compose -p sql-executor down --remove-orphans || true
+    # Останавливаем и удаляем текущий стек
+    - docker-compose -p database-api down --remove-orphans || true
+    # Сообщение перед поднятием нового стека
+    - echo "Starting deploy with docker-compose cuda2"
+    # Явно тянем latest с registry (docker-compose v1 без --pull always)
+    - docker pull $DOCKER_IMAGE_NAME
+    # Поднимаем сервис database в фоне
+    - docker-compose -p database-api up -d --remove-orphans
+  only:
+    - master
+    - main

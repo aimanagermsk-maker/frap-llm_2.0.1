@@ -1,0 +1,45 @@
+stages:
+  - docker_build
+  - docker_push
+  - deploy
+
+variables:
+  DEPLOY_NAME: "new-project"
+  DOCKER_IMAGE_NAME: "$CI_REGISTRY_NAME/$DEPLOY_NAME:latest"
+
+
+docker_build_job:
+  stage: docker_build
+  tags:
+    - shell
+  script:
+    - docker build --network host -t $DOCKER_IMAGE_NAME .
+
+
+docker_push_job:
+  stage: docker_push
+  tags:
+    - shell
+  dependencies:
+    - docker_build_job
+  script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+    - docker push $DOCKER_IMAGE_NAME
+
+
+deploy_job_cuda2:
+  stage: deploy
+  tags:
+    - shell-cuda2
+  script:
+    - echo "DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME" > .env
+    - echo "DOCKER_CONTAINER_NAME=new-project-api" >> .env
+    - echo "APP_PROFILE=prod" >> .env
+    - echo "CONTOUR_CONFIG_PATH=/opt/new-project/prod.yaml" >> .env
+    - docker-compose -p new-project-api down --remove-orphans || true
+    - echo "Starting deploy with docker-compose cuda2"
+    - docker pull $DOCKER_IMAGE_NAME
+    - docker-compose -p new-project-api up -d --remove-orphans
+  only:
+    - master
+    - main
