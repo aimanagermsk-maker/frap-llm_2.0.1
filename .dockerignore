@@ -21,7 +21,7 @@ __pycache__/
 .git/
 .gitignore
 
-# Reference project
+# Local tooling (not part of the image)
 sql-executor/
 
 # Documentation

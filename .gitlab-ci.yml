@@ -1,45 +1,71 @@
 stages:
-  - docker_build
-  - docker_push
-  - deploy
+  - image_build
+  - image_copy
+  - deploy_trigger
 
 variables:
-  DEPLOY_NAME: "new-project"
-  DOCKER_IMAGE_NAME: "$CI_REGISTRY_NAME/$DEPLOY_NAME:latest"
+  APP_NAME: "new-project"
+  GIT_SUBMODULE_STRATEGY: none
 
+image: registry.gitlab-ci.ru/helm:latest
 
-docker_build_job:
-  stage: docker_build
+default:
   tags:
-    - shell
+    - sandbox
+
+image_build:
+  stage: image_build
+  image:
+    name: registry.gitlab-ci.ru/kaniko:latest
+    entrypoint: [""]
+  before_script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(echo -n ${CI_REGISTRY_USER}:${CI_REGISTRY_PASSWORD} | base64)\"}}}" > /kaniko/.docker/config.json
   script:
-    - docker build --network host -t $DOCKER_IMAGE_NAME .
+    - /kaniko/executor --context $CI_PROJECT_DIR
+      --cache=true
+      --dockerfile $CI_PROJECT_DIR/Dockerfile
+      --destination $CI_REGISTRY/$CI_PROJECT_NAME:latest
+      --destination $CI_REGISTRY/$CI_PROJECT_NAME:$CI_COMMIT_SHORT_SHA
 
-
-docker_push_job:
-  stage: docker_push
+retag_image:
+  image:
+    name: registry.gitlab-ci.ru/crane:latest
+    entrypoint: [""]
+  stage: image_copy
   tags:
-    - shell
-  dependencies:
-    - docker_build_job
+    - test-circuit
+  variables:
+    GODEBUG: x509ignoreCN=0
+  before_script:
+    - mkdir /root/.docker &&
+      echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /root/.docker/config.json
+    - >
+      [[ ! -z "$APP_NAME" ]] &&
+      export CI_PROJECT_NAME=$APP_NAME
   script:
-    - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
-    - docker push $DOCKER_IMAGE_NAME
-
-
-deploy_job_cuda2:
-  stage: deploy
-  tags:
-    - shell-cuda2
-  script:
-    - echo "DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME" > .env
-    - echo "DOCKER_CONTAINER_NAME=new-project-api" >> .env
-    - echo "APP_PROFILE=$APP_PROFILE" >> .env
-    - echo "SERVER_CONFIG_DIR=$SERVER_CONFIG_DIR" >> .env
-    - docker-compose -p new-project-api down --remove-orphans || true
-    - echo "Starting deploy with docker-compose cuda2"
-    - docker pull $DOCKER_IMAGE_NAME
-    - docker-compose -p new-project-api up -d --remove-orphans
+    - SSL_CERT_FILE=$DOCKERHUB_LOCAL_CERTIFICATE
+    - crane auth login -u developer -p $CI_TEST_PASSWORD dockerhub.local:5000
+    - crane cp $CI_REGISTRY/$CI_PROJECT_NAME:latest dockerhub.local:5000/$CI_PROJECT_NAME:latest
+    - crane cp $CI_REGISTRY/$CI_PROJECT_NAME:$CI_COMMIT_SHORT_SHA dockerhub.local:5000/$CI_PROJECT_NAME:$CI_COMMIT_SHORT_SHA
   only:
-    - master
-    - main
+    refs:
+      - /^develop.*$/
+
+deploy:trigger:
+  stage: deploy_trigger
+  script:
+    - which curl || ( apk --update add curl )
+    - curl -X POST
+      --fail
+      -F token=$DEPLOY_TOKEN
+      -F variables[DEPLOY_IMAGE_TAG]=$CI_COMMIT_SHORT_SHA
+      -F variables[SERVICE_NAME]=$APP_NAME
+      -F ref=deploy/sandbox
+      https://repo.r77.center-inform.ru/api/v4/projects/$DEPLOY_PROJECT_ID/trigger/pipeline
+  allow_failure: true
+  only:
+    refs:
+      - /^develop.*$/
+      - main
+      - master
