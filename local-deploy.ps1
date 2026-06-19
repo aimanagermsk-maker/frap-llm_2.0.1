@@ -2,8 +2,8 @@
 
 $ErrorActionPreference = "Stop"
 
-$ImageName = "new-project-img"
-$ContainerName = "new-project-app"
+$ImageName = "frap-llm-helper-img"
+$ContainerName = "frap-llm-helper-app"
 $AppPort = 8000
 $AppProfile = if ($env:APP_PROFILE) { $env:APP_PROFILE } else { "sandbox" }
 $ProjectRoot = $PSScriptRoot

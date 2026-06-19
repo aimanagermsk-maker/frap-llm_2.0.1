@@ -23,7 +23,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="New Project API",
+    title="frap-llm-helper API",
     version=VERSION,
     docs_url="/docs",
     lifespan=lifespan,

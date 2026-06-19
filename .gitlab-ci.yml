@@ -4,7 +4,7 @@ stages:
   - deploy_trigger
 
 variables:
-  APP_NAME: "new-project"
+  APP_NAME: "frap-llm-helper"
   GIT_SUBMODULE_STRATEGY: none
 
 image: registry.gitlab-ci.ru/helm:latest

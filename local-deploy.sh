@@ -3,8 +3,8 @@
 
 set -euo pipefail
 
-IMAGE_NAME=new-project-img
-CONTAINER_NAME=new-project-app
+IMAGE_NAME=frap-llm-helper-img
+CONTAINER_NAME=frap-llm-helper-app
 APP_PORT=8000
 APP_PROFILE="${APP_PROFILE:-sandbox}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

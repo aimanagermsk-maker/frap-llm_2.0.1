@@ -1,7 +1,7 @@
 services:
-  new-project:
+  frap-llm-helper:
     build: .
-    container_name: new-project-app
+    container_name: frap-llm-helper-app
     ports:
       - "8000:8000"
     environment:

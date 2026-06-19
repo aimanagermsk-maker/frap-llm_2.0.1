@@ -1,4 +1,4 @@
-# new-project
+# frap-llm-helper
 
 Шаблон Python-сервиса 
 
@@ -86,27 +86,27 @@ APP_PROFILE=test ./local-deploy.sh
 ```
 
 Оба скрипта:
-- собирают образ `new-project-img`
-- запускают контейнер `new-project-app` на порту `8000`
+- собирают образ `frap-llm-helper-img`
+- запускают контейнер `frap-llm-helper-app` на порту `8000`
 - передают `-e APP_PROFILE=...` (по умолчанию `sandbox`)
 - монтируют `settings/server` — yaml с сервера перезаписывает и дополняет конфиг профиля из образа (см. выше)
 
 Или вручную:
 
 ```bash
-docker build -t new-project-img .
+docker build -t frap-llm-helper-img .
 
-docker run -d -p 8000:8000 --name new-project-app \
+docker run -d -p 8000:8000 --name frap-llm-helper-app \
   -e APP_PROFILE=sandbox \
   -v ./settings/server:/app/settings/server:ro \
-  new-project-img
+  frap-llm-helper-img
 ```
 
 
 Логи:
 
 ```bash
-docker logs -f new-project-app
+docker logs -f frap-llm-helper-app
 ```
 
 ## CI/CD
