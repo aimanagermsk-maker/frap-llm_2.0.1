@@ -61,3 +61,23 @@ CI только собирает образ и триггерит деплой C
 ```bash
 docker logs -f frap-llm-helper
 ```
+
+## Kafka
+
+**Чтение**
+```bash
+/opt/kafka/kafka/bin/kafka-console-consumer.sh --bootstrap-server gitlab-ci.ru:9092 --topic frap-llm-helper-in --from-beginning
+```
+
+```bash
+/opt/kafka/kafka/bin/kafka-console-consumer.sh --bootstrap-server gitlab-ci.ru:9092 --topic frap-llm-helper-out --from-beginning
+```
+
+**Запись**
+```bash
+/opt/kafka/kafka/bin/kafka-console-producer.sh --broker-list gitlab-ci.ru:9092 --topic frap-llm-helper-in
+```
+
+```bash
+/opt/kafka/kafka/bin/kafka-console-producer.sh --broker-list gitlab-ci.ru:9092 --topic frap-llm-helper-out
+```
