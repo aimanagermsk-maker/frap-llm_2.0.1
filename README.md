@@ -55,38 +55,9 @@ CI только собирает образ и триггерит деплой C
 
 [`local-deploy.sh`](local-deploy.sh):
 
-```bash
-chmod +x local-deploy.sh  
-./local-deploy.sh
-```
-
-```bash
-PYTHON_PROFILES_ACTIVE=test ./local-deploy.sh
-```
-
-```bash
-docker build -t frap-llm-helper-img .
-
-docker run -d -p 8000:8000 --name frap-llm-helper \
-  -e PYTHON_PROFILES_ACTIVE=sandbox \
-  frap-llm-helper-img
-```
-
 
 Логи:
 
 ```bash
 docker logs -f frap-llm-helper
 ```
-
-## CI/CD
-
-[`.gitlab-ci.yml`](.gitlab-ci.yml):
-
-1. `image_build` — kaniko, push в GitLab Registry
-2. `retag_image` — копия в dockerhub.local
-3. `deploy:trigger` — триггер pipeline деплоя Center-Inform
-
-Переменные GitLab CI/CD (Settings → CI/CD → Variables):
-
-Профиль (`PYTHON_PROFILES_ACTIVE`) в CI **не задаётся**.

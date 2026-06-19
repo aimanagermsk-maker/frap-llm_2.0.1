@@ -6,7 +6,6 @@ set -euo pipefail
 IMAGE_NAME=frap-llm-helper-img
 CONTAINER_NAME=frap-llm-helper
 APP_PORT=8000
-PYTHON_PROFILES_ACTIVE="${PYTHON_PROFILES_ACTIVE:-sandbox}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 docker stop "$CONTAINER_NAME" 2>/dev/null || true
