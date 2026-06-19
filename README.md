@@ -21,9 +21,9 @@
 
 
 
-### Override на сервере (тестировщики)
+### Override на сервере
 
-Папка [`settings/server/`](settings/server/) монтируется в `/app/settings/server`. Файл `{profile}.yaml` (имя = `APP_PROFILE`) — yaml со свойствами на сервере: перезаписывает и дополняет конфиг профиля из образа без пересборки. Пример: `settings/server/sandbox.yaml`.
+Папка [`settings/server/`](settings/server/) на сервере монтируется в образ`/app/settings/server`. Файл `{profile}.yaml` (profile берется из переменной задаваемой при запуске контейнера : `APP_PROFILE`) — yaml со свойствами на сервере: перезаписывает и дополняет конфиг профиля из образа без пересборки. Пример: `settings/server/sandbox.yaml`.
 
 
 
