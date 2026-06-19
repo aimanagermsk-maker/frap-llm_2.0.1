@@ -4,6 +4,8 @@ services:
     container_name: ${DOCKER_CONTAINER_NAME}
     environment:
       APP_PROFILE: ${APP_PROFILE}
+    volumes:
+      - ${SERVER_CONFIG_DIR}:/app/settings/server:ro
     networks:
       - easy-craft-network
     restart: unless-stopped

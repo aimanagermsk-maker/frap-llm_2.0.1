@@ -10,7 +10,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from app.config.database_config import DatabaseConfig
 from app.config.logging_config import LoggingConfig
-from app.config.paths import CONTOURS_DIR, ENV_FILE, SETTINGS_DIR
+from app.config.paths import CONTOURS_DIR, ENV_FILE, SERVER_CONFIG_DIR, SETTINGS_DIR
 
 logger = logging.getLogger(__name__)
 
@@ -64,6 +64,11 @@ def _load_merged_config(contour: str) -> dict[str, Any]:
 
     merged = _load_yaml(BASE_CONFIG_PATH)
     merged = _deep_merge(merged, _load_yaml(contour_path))
+
+    server_path = SERVER_CONFIG_DIR / f"{contour}.yaml"
+    if server_path.is_file():
+        merged = _deep_merge(merged, _load_yaml(server_path))
+
     merged["contour"] = contour
     return merged
 

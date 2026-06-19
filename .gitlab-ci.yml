@@ -35,6 +35,7 @@ deploy_job_cuda2:
     - echo "DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME" > .env
     - echo "DOCKER_CONTAINER_NAME=new-project-api" >> .env
     - echo "APP_PROFILE=$APP_PROFILE" >> .env
+    - echo "SERVER_CONFIG_DIR=$SERVER_CONFIG_DIR" >> .env
     - docker-compose -p new-project-api down --remove-orphans || true
     - echo "Starting deploy with docker-compose cuda2"
     - docker pull $DOCKER_IMAGE_NAME

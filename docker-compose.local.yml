@@ -7,5 +7,5 @@ services:
     environment:
       APP_PROFILE: ${APP_PROFILE:-sandbox}
     volumes:
-      - ./settings/contours/${APP_PROFILE:-sandbox}.yaml:/app/settings/contours/${APP_PROFILE:-sandbox}.yaml:ro
+      - ./settings/server:/app/settings/server:ro
     restart: unless-stopped
