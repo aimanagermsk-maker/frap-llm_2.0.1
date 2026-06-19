@@ -14,17 +14,14 @@
 
 ### Песок и другие контуры
 
-[`settings/contours/sandbox.yaml`](settings/contours/sandbox.yaml) — полный конфиг песка (БД, logging).
+[`settings/application-sandbox.yaml`](settings/application-sandbox.yaml) — полный конфиг песка (БД, logging).
 
-Другие профили — файлы в [`settings/contours/`](settings/contours/) (`test.yaml`, `prod.yaml` и т.д.).
+Другие профили — [`settings/application-{profile}.yaml`](settings/) (`application-test.yaml`, `application-prod.yaml` и т.д.).
 Справочник всех полей: [`settings/config.reference.yaml`](settings/config.reference.yaml).
 
 
 
-### Override на сервере
-
-Папка [`settings/server/`](settings/server/) на сервере монтируется в образ`/app/settings/server`. Файл `{profile}.yaml` (profile берется из переменной задаваемой при запуске контейнера : `APP_PROFILE`) — yaml со свойствами на сервере: перезаписывает и дополняет конфиг профиля из образа без пересборки. Пример: `settings/server/sandbox.yaml`.
-
+### Override через environment (тестировщики / стенд)
 
 
 
@@ -35,11 +32,11 @@
 Профиль задаётся **при запуске контейнера**
 
 ```bash
--e APP_PROFILE=sandbox
+-e PYTHON_PROFILES_ACTIVE=sandbox
 ```
 
 CI только собирает образ и триггерит деплой Center-Inform (`DEPLOY_IMAGE_TAG`, `SERVICE_NAME`).
-На стенде профиль и override задаёт команда эксплуатации / тестировщики при `docker run` или в манифесте деплоя.
+На стенде профиль и override задаёт эксплуатация / тестировщики через **environment** в манифесте деплоя или `docker run`.
 
 
 ## Тестовое приложение (вывод в консоль)
@@ -47,7 +44,7 @@ CI только собирает образ и триггерит деплой C
 При старте в лог пишется активный конфиг:
 
 - [`app/main.py`](app/main.py) — точка входа, `lifespan` вызывает `log_app_config()`
-- [`app/config/app_config.py`](app/config/app_config.py) — загрузка yaml и вывод в stdout
+- [`app/config/app_config.py`](app/config/app_config.py) — загрузка yaml, merge environment, вывод в stdout
 
 
 Проверка через API:
@@ -56,49 +53,22 @@ CI только собирает образ и триггерит деплой C
 
 ## Сборка и локальный запуск в Docker
 
-Два скрипта с одинаковой логикой — выбирай под свою ОС:
-
-| ОС | Скрипт |
-|----|--------|
-| Windows | [`local-deploy.ps1`](local-deploy.ps1) |
-| Linux / macOS / Git Bash | [`local-deploy.sh`](local-deploy.sh) |
-
-**Windows (PowerShell):**
-
-```powershell
-.\local-deploy.ps1
-```
-
-```powershell
-$env:APP_PROFILE = "test"
-.\local-deploy.ps1
-```
-
-**Linux / macOS / Git Bash:**
+[`local-deploy.sh`](local-deploy.sh):
 
 ```bash
-chmod +x local-deploy.sh   # один раз
+chmod +x local-deploy.sh  
 ./local-deploy.sh
 ```
 
 ```bash
-APP_PROFILE=test ./local-deploy.sh
+PYTHON_PROFILES_ACTIVE=test ./local-deploy.sh
 ```
-
-Оба скрипта:
-- собирают образ `frap-llm-helper-img`
-- запускают контейнер `frap-llm-helper-app` на порту `8000`
-- передают `-e APP_PROFILE=...` (по умолчанию `sandbox`)
-- монтируют `settings/server` — yaml с сервера перезаписывает и дополняет конфиг профиля из образа (см. выше)
-
-Или вручную:
 
 ```bash
 docker build -t frap-llm-helper-img .
 
-docker run -d -p 8000:8000 --name frap-llm-helper-app \
-  -e APP_PROFILE=sandbox \
-  -v ./settings/server:/app/settings/server:ro \
+docker run -d -p 8000:8000 --name frap-llm-helper \
+  -e PYTHON_PROFILES_ACTIVE=sandbox \
   frap-llm-helper-img
 ```
 
@@ -106,7 +76,7 @@ docker run -d -p 8000:8000 --name frap-llm-helper-app \
 Логи:
 
 ```bash
-docker logs -f frap-llm-helper-app
+docker logs -f frap-llm-helper
 ```
 
 ## CI/CD
@@ -119,10 +89,4 @@ docker logs -f frap-llm-helper-app
 
 Переменные GitLab CI/CD (Settings → CI/CD → Variables):
 
-| Variable | Назначение |
-|----------|------------|
-| `DEPLOY_TOKEN` | токен trigger pipeline деплоя |
-| `DEPLOY_PROJECT_ID` | id проекта деплоя в GitLab |
-| `CI_TEST_PASSWORD` | для dockerhub.local (retag) |
-
-Профиль (`APP_PROFILE`) в CI **не задаётся**.
+Профиль (`PYTHON_PROFILES_ACTIVE`) в CI **не задаётся**.

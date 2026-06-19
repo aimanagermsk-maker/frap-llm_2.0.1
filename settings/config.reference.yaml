@@ -1,3 +1,4 @@
+# Справочник полей для application.yaml + application-{profile}.yaml
 
 contour: sandbox
 
@@ -22,3 +23,7 @@ database:
 #   dsn: postgresql://89.108.103.170:5432
 #   username: fsrar_user
 #   password: Qwerty1234
+
+# Environment (yaml → K8S, UPPERCASE, точки на _):
+# PYTHON_PROFILES_ACTIVE=sandbox
+# DATABASE_URL=jdbc:postgresql://host:5432

@@ -7,5 +7,4 @@ venv/
 env/
 .env
 .env.local
-settings/server/*.yaml
 .idea/
