@@ -10,7 +10,7 @@ from app.routers import hello_router
 
 VERSION = "0.1.0"
 HOST = "0.0.0.0"
-PORT = 9020
+PORT = 8000
 
 
 @asynccontextmanager

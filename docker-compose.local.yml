@@ -3,7 +3,7 @@ services:
     build: .
     container_name: new-project-app
     ports:
-      - "9020:9020"
+      - "8000:8000"
     environment:
       APP_PROFILE: ${APP_PROFILE:-sandbox}
     volumes:
