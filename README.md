@@ -1,4 +1,4 @@
-# frap-llm-helper
+п»ї# frap-llm-helper
 
 РЁР°Р±Р»РѕРЅ Python-СЃРµСЂРІРёСЃР° 
 
@@ -81,30 +81,31 @@ docker logs -f frap-llm-helper
 ```bash
 /opt/kafka/kafka/bin/kafka-console-producer.sh --broker-list gitlab-ci.ru:9092 --topic frap-llm-helper-out
 ```
-## Schema
+
+## РЎРҐР•РњРђ
 
 frap-llm/
-+-- app/
-¦   +-- main.py                   # Модифицирован (добавлен lifespan, запуск Consumer)
-¦   +-- config/
-¦   ¦   +-- app_config.py         # Модифицирован (добавлена загрузка моделей)
-¦   ¦   L-- __init__.py
-¦   +-- models/
-¦   ¦   +-- config_models.py      # НОВЫЙ: Pydantic-модели для конфигурации
-¦   ¦   L-- __init__.py
-¦   +-- services/
-¦   ¦   +-- processor.py          # НОВЫЙ: Основная логика обработки
-¦   ¦   +-- kafka_client.py       # НОВЫЙ: Обертка для работы с Kafka
-¦   ¦   +-- db_client.py          # НОВЫЙ: Обертка для работы с PostgreSQL
-¦   ¦   L-- __init__.py
-¦   +-- routers/
-¦   ¦   +-- hello_router.py       # Существующий (без изменений)
-¦   ¦   L-- __init__.py
-¦   L-- utils/
-¦       +-- logging_config.py     # НОВЫЙ: Настройка логирования
-¦       L-- __init__.py
-+-- settings/
-¦   +-- application.yaml
-¦   +-- application-sandbox.yaml  # Модифицирован (добавлена секция file_storage)
-¦   L-- config.reference.yaml
-L-- requirements.txt              # Добавить: aiokafka, asyncpg, pydantic, PyYAML
+в”њв”Ђв”Ђ app/
+в”‚   в”њв”Ђв”Ђ main.py                   # РњРѕРґРёС„РёС†РёСЂРѕРІР°РЅ (РґРѕР±Р°РІР»РµРЅ lifespan, Р·Р°РїСѓСЃРє Consumer)
+в”‚   в”њв”Ђв”Ђ config/
+в”‚   в”‚   в”њв”Ђв”Ђ app_config.py         # РњРѕРґРёС„РёС†РёСЂРѕРІР°РЅ (РґРѕР±Р°РІР»РµРЅР° Р·Р°РіСЂСѓР·РєР° РјРѕРґРµР»РµР№)
+в”‚   в”‚   в””в”Ђв”Ђ __init__.py
+в”‚   в”њв”Ђв”Ђ models/
+в”‚   в”‚   в”њв”Ђв”Ђ config_models.py      # РќРћР’Р«Р™: Pydantic-РјРѕРґРµР»Рё РґР»СЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
+в”‚   в”‚   в””в”Ђв”Ђ __init__.py
+в”‚   в”њв”Ђв”Ђ services/
+в”‚   в”‚   в”њв”Ђв”Ђ processor.py          # РќРћР’Р«Р™: РћСЃРЅРѕРІРЅР°СЏ Р»РѕРіРёРєР° РѕР±СЂР°Р±РѕС‚РєРё
+в”‚   в”‚   в”њв”Ђв”Ђ kafka_client.py       # РќРћР’Р«Р™: РћР±РµСЂС‚РєР° РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ Kafka
+в”‚   в”‚   в”њв”Ђв”Ђ db_client.py          # РќРћР’Р«Р™: РћР±РµСЂС‚РєР° РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ PostgreSQL
+в”‚   в”‚   в””в”Ђв”Ђ __init__.py
+в”‚   в”њв”Ђв”Ђ routers/
+в”‚   в”‚   в”њв”Ђв”Ђ hello_router.py       # РЎСѓС‰РµСЃС‚РІСѓСЋС‰РёР№ (Р±РµР· РёР·РјРµРЅРµРЅРёР№)
+в”‚   в”‚   в””в”Ђв”Ђ __init__.py
+в”‚   в””в”Ђв”Ђ utils/
+в”‚       в”њв”Ђв”Ђ logging_config.py     # РќРћР’Р«Р™: РќР°СЃС‚СЂРѕР№РєР° Р»РѕРіРёСЂРѕРІР°РЅРёСЏ
+в”‚       в””в”Ђв”Ђ __init__.py
+в”њв”Ђв”Ђ settings/
+в”‚   в”њв”Ђв”Ђ application.yaml
+в”‚   в”њв”Ђв”Ђ application-sandbox.yaml  # РњРѕРґРёС„РёС†РёСЂРѕРІР°РЅ (РґРѕР±Р°РІР»РµРЅР° СЃРµРєС†РёСЏ file_storage)
+в”‚   в””в”Ђв”Ђ config.reference.yaml
+в””в”Ђв”Ђ requirements.txt              # Р”РѕР±Р°РІРёС‚СЊ: aiokafka, asyncpg, pydantic, PyYAML
