@@ -83,8 +83,8 @@ docker logs -f frap-llm-helper
 ```
 
 ## СХЕМА
-
-frap-llm/
+```bash
+frap-llm-helper/
 ├── app/
 │   ├── main.py                   # Модифицирован (добавлен lifespan, запуск Consumer)
 │   ├── config/
@@ -109,3 +109,4 @@ frap-llm/
 │   ├── application-sandbox.yaml  # Модифицирован (добавлена секция file_storage)
 │   └── config.reference.yaml
 └── requirements.txt              # Добавить: aiokafka, asyncpg, pydantic, PyYAML
+```
