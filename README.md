@@ -81,3 +81,30 @@ docker logs -f frap-llm-helper
 ```bash
 /opt/kafka/kafka/bin/kafka-console-producer.sh --broker-list gitlab-ci.ru:9092 --topic frap-llm-helper-out
 ```
+## Schema
+
+frap-llm/
++-- app/
+¦   +-- main.py                   # Модифицирован (добавлен lifespan, запуск Consumer)
+¦   +-- config/
+¦   ¦   +-- app_config.py         # Модифицирован (добавлена загрузка моделей)
+¦   ¦   L-- __init__.py
+¦   +-- models/
+¦   ¦   +-- config_models.py      # НОВЫЙ: Pydantic-модели для конфигурации
+¦   ¦   L-- __init__.py
+¦   +-- services/
+¦   ¦   +-- processor.py          # НОВЫЙ: Основная логика обработки
+¦   ¦   +-- kafka_client.py       # НОВЫЙ: Обертка для работы с Kafka
+¦   ¦   +-- db_client.py          # НОВЫЙ: Обертка для работы с PostgreSQL
+¦   ¦   L-- __init__.py
+¦   +-- routers/
+¦   ¦   +-- hello_router.py       # Существующий (без изменений)
+¦   ¦   L-- __init__.py
+¦   L-- utils/
+¦       +-- logging_config.py     # НОВЫЙ: Настройка логирования
+¦       L-- __init__.py
++-- settings/
+¦   +-- application.yaml
+¦   +-- application-sandbox.yaml  # Модифицирован (добавлена секция file_storage)
+¦   L-- config.reference.yaml
+L-- requirements.txt              # Добавить: aiokafka, asyncpg, pydantic, PyYAML
