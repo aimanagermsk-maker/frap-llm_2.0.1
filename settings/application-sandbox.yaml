@@ -1,14 +1,4 @@
-contour: sandbox
-
-logging:
-  app: DEBUG
-
-database:
-  url: jdbc:postgresql://89.108.103.170:5432
-  username: fsrar_user
-  password: Qwerty1234
-
-# ... другие настройки
+# settings/application-sandbox.yaml
 postgres:
   host: "localhost"
   port: 5432
@@ -26,4 +16,12 @@ kafka:
 file_storage:
   output_folder: "/app/data/output"
   file_prefix: "result_"
-  cleanup_after_send: false  # В песочнице оставляем файлы для отладки
+  cleanup_after_send: false
+
+logging:
+  enabled: true
+  table_name: "service_logs"
+  batch_size: 10
+  flush_interval_seconds: 5
+  async_mode: true
+  log_levels: ["ERROR", "WARNING", "INFO", "DEBUG"]
