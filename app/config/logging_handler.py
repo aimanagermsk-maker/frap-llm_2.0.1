@@ -57,6 +57,3 @@ def setup_logging_with_db():
     root_logger.addHandler(db_handler)
     
     return root_logger
-    root_logger.addHandler(db_handler)
-    
-    return root_logger
