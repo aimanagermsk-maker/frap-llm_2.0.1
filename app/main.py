@@ -9,12 +9,12 @@ import psutil
 from fastapi import FastAPI
 from app.config.app_config import get_config
 from app.routers import hello_router
-from app.config.kafka_client import KafkaClient
-from app.config.db_client import DatabaseClient
-from app.config.processor import process_message
-from app.config.logging_service import LoggingService, log_service
-from app.config.logging_handler import setup_logging_with_db
-from app.config.logging_config import setup_logging
+from app.services.kafka_client import KafkaClient
+from app.services.db_client import DatabaseClient
+from app.services.processor import process_message
+from app.services.logging_service import LoggingService, log_service
+from app.utils.logging_handler import setup_logging_with_db
+from app.utils.logging_config import setup_logging
 
 logger = logging.getLogger(__name__)
 
