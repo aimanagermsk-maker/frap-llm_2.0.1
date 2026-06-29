@@ -2,5 +2,9 @@ fastapi==0.121.3
 uvicorn==0.38.0
 pydantic==2.12.4
 pydantic-settings==2.14.1
-pyyaml==6.0.3
+aiokafka==0.8.0
+asyncpg==0.29.0
+PyYAML==6.0.1
+lxml==5.1.0         # Для парсинга XML
+aiofiles==23.2.1    # Для асинхронной работы с файлами
 python-dotenv==1.2.1
