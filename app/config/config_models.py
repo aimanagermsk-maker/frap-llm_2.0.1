@@ -4,14 +4,6 @@ from typing import Optional, Dict, Any
 from datetime import datetime
 from uuid import UUID
 
-class PostgresConfig(BaseModel):
-    host: str
-    port: int
-    database: str
-    user: str
-    password: str
-    table_name: str
-
 class KafkaConfig(BaseModel):
     bootstrap_servers: str
     consumer_group_id: str
@@ -19,9 +11,9 @@ class KafkaConfig(BaseModel):
     output_topic: str
 
 class FileStorageConfig(BaseModel):
-    output_folder: str
-    file_prefix: Optional[str] = "result_"
-    cleanup_after_send: Optional[bool] = False
+    """Конфигурация файлового хранилища"""
+    base_path: str = "/data"  # Базовый путь к файлам [Part1]
+    output_dir: str = "/output"  # Папка для сохранения результатов
 
 class LoggingConfig(BaseModel):
     """Конфигурация логирования в БД"""
@@ -33,7 +25,6 @@ class LoggingConfig(BaseModel):
     log_levels: list[str] = ["ERROR", "WARNING", "INFO", "DEBUG"]
 
 class AppConfig(BaseModel):
-    postgres: PostgresConfig
     kafka: KafkaConfig
     file_storage: FileStorageConfig
-    logging: LoggingConfig = Field(default_factory=LoggingConfig)
+    logging: Optional[Dict[str, Any]] = None
