@@ -9,19 +9,14 @@ postgres:
 
 kafka:
   bootstrap_servers: "gitlab-ci.ru:9092"
-  consumer_group_id: "frap-llm-helper-group"
-  input_topic: "frap-llm-helper-in"
-  output_topic: "frap-llm-helper-out"
+  consumer_group: "frap-llm-helper-group"
+  topic_in: "frap-llm-helper-in"
+  topic_out: "frap-llm-helper-out"
 
 file_storage:
-  output_folder: "/app/data/output"
-  file_prefix: "result_"
-  cleanup_after_send: false
+  base_path: "/data/frap-files"  # [Part1] - базовый путь
+  output_dir: "/app/output"      # Папка для сохранения результатов
 
 logging:
-  enabled: true
-  table_name: "service_logs"
-  batch_size: 10
-  flush_interval_seconds: 5
-  async_mode: true
-  log_levels: ["ERROR", "WARNING", "INFO", "DEBUG"]
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
